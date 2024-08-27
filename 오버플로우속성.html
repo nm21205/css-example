@@ -25,8 +25,29 @@
       }
       .box1 {
         /*스크롤생성*/
-        /*overflow: scroll;*/
+        /*overflow: scroll; 이건 둘다생김 그래서 안 씀*/
+        /*y축으로만 스크롤이생기는 태크임.*/
         overflow-y: scroll;
+        /*x축은 -x임 위에는 y인것처럼*/
+        overflow: hidden;
+        white-space: nowrap;
+        /*텍스트 뒤에...표시*/
+        text-overflow: ellipsis;
+      }
+      .box2 {
+        /*내용이 넘칠때 스크롤이 자동 생성된다*/
+        overflow: auto;
+      }
+      .parent {
+        background-color: gray;
+        /*오버플로우가 히든이면 자식요소의 마진 탑이 자신의 요소안에서 이뤄집니다*/
+        overflow: hidden;
+      }
+      .child {
+        width: 500px;
+        height: 500px;
+        background-color: orange;
+        margin-top: 100px;
       }
     </style>
   </head>
@@ -47,5 +68,8 @@
       유명하다. 밀도 높은 목재와 조립법을 사용하여 긴 서스테인과 묵직환 저음
       드라이브 톤이 매력적이다. 사운드는 묵직해서 메탈에서 많이 사용된다
     </p>
+    <div class="parent">
+      <div class="child">A</div>
+    </div>
   </body>
 </html>
