@@ -5,28 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-     * {margin: 0; ,padding: 0;
-     }
-    .box1{width: 600px;
-          height: 700px;
-         background-position:center;
-         background-size: cover; 
-    background-image: url(/연습문제이미지/background1.jpg);}
-    .box1{width: 600px;
-          height: 700px;
-          margin: 100px;
-         background-position:center; 
-    background-image: url(/연습문제이미지/background2.jpg));}
-
+    .box1{width:600px;
+          height: 600px;
+          border: 1px solid red;
+          background-image: url(/연습문제이미지/background1.jpg);
+       }
+    .box2{width:400px;
+          height: 400px;
+          padding:100px;
+          box-sizing:border-box;/*width와 height값 안쪽으로 ㅠㅐ딩을 넣어줌*/
+    background-image:url(/연습문제이미지/background2.jpg);}
+    .box3 {box-sizing:border-box;
+           padding: 30px;
+          font-weight: bold;
+          fonr: size 24px;
+          color: #fff;}
   </style>
 </head>
 <body>
 <div class="box1">
   <div class="box2">
-<div class="box3">
-  <h1>background</h1>
-</div>
-  </div>
+<div class="box3">background</div>
 </div>
 </body>
 </html>
