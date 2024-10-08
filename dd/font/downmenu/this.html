@@ -21,11 +21,12 @@
       console.log(e.currentTarget); //#button1
       //$button1의 textContent를 1증가시킨다.
       ++this.textContent;
+      
     }
     //addEventListener 메서드 방식
     $button2.addEventListener("click", e =>{
       //화살표 함수 내부의 this는 상위 스코프의 this를 가리킨다(여기서는 window)
-     
+      console.log(this)
       console.log(e.currentTarget); //$button2;
 
       //this는 window를 가리키므로 window.textContent에 NaN을 할당된다.
