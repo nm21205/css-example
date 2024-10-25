@@ -207,6 +207,104 @@
       e.preventDefault();//메뉴(a)요소의 링크기능을 제거
       scrollToAni(idx * innerHeight);//scrollToAni함수를 호출 이때 인자로 해당메뉴의 순번*브라우저의 높이를 전달
     }))
+
+    //휠 이벤트 활성화를 제어할 변수
+    let slideAniStatus = true;
+
+    //슬라이드 애니메이션
+    const slideAnimation = (to) => {
+      let k = -90;
+      const startScroll = scrollY;
+
+      const animate = () => {
+        k = Math.min(k + 90 / (60 * 0.5), 0); //k를 0으로 제한하여 업데이트
+        //(60 * 0.5) 여기서 0.5는 지속시간(duration)입니다.
+
+        const easeUp = Math.sin(k * Math.PI/180) + 1; //0~1로 증가
+        const easeDown = Math.sin((k + 180) * Math.PI / 180); //1~0으로 감소
+
+        scrollTo(0, startScroll * easeDown + to * easeUp);
+
+        if(k >= 0) clearInterval(id);
+      }
+      const id = setInterval(animate, 1000/60);
+    }
+
+    //바운스 효과
+    const bouncing = (plusMinus) => {
+      let k = 0;
+      const startScroll = scrollY;
+      const animate = () => {
+        k = Math.min(k + 180 / (60 * 0.5), 180) //k를 180으로 제한
+        //plusMinus는 -1또는 1이 휠 이벤트가 발생될때 전달됨
+        const bounceDown = Math.round(plusMinus * (Math.abs(Math.sin((k * Math.PI / 180 + 2.26) ** 1.4) / ((k * Math.PI / 180 + 2.26) ** 2)) * 1500 - 48));
+
+        scrollTo(0, startScroll + bounceDown);
+        if(k >= 180) clearInterval(id);
+      }
+      const id = setInterval(animate, 1000/60);
+    }
+
+    //contents배열의 각 요소에 wheel이벤트 리스너를 추가
+    for(const item of contents){
+      item.addEventListener('wheel', (e) => {
+       
+        // if(e.deltaY < 0){
+        //   if(item.previousElementSibling){
+        //     if(slideAniStatus === true){
+        //     }
+        //   }
+        // }
+        if(
+          e.deltaY < 0 &&//스크롤을 위로 이동했는지 확인
+          item.previousElementSibling &&//현재 요소에 이전 형제가 있는지 확인
+          slideAniStatus === true//현재 애니메이션 상태가 true인지 확인
+        ){
+          slideAniStatus = false;//애니메이션 상태를 false로 변경하여 애니메이션이 실행 중임을 나타냅니다
+          console.log(e.deltaY)//양수면 스크롤을 아래로 이동, 음수면 스크롤을 위로 이동
+
+          //이전 형제 요소의 top위치를 계산하여 prev변수에 저장
+          const prev = scrollY + item.previousElementSibling.getBoundingClientRect().top;//스크롤 이동값 + 요소의 top위치값 = 브라우저 최상단에서 이동할 요소의 top위치까지의 거리
+
+          //slideAnimation함수를 호출하여 이전 섹션으로 스크롤 합니다
+          slideAnimation(prev);
+
+          //0.5초후에 bouncing함수를 호출하여 바운스 효과를 추가
+          setTimeout(function(){
+            bouncing(1)
+          }, 500);
+
+          //슬라이드 이벤트가 끝난 뒤 슬라이드 애니메이션 상태를 true로 되돌려 애니메이션이 종료되었음을 나타냅니다.
+          setTimeout(function(){
+            slideAniStatus = true;
+          }, 1000)
+        }
+
+        if(
+          e.deltaY > 0 && //휠 스크롤이 아래로 이동했는지 확인
+          item.nextElementSibling && //현재 요소에 다음 형제가 있는지 확인
+          slideAniStatus === true //현재 슬라이드 애니메이션 상태가 true인지
+        ){
+          slideAniStatus = false;
+
+          //다음 형제 요소의 top위치를 계산하여 next변수에 저장
+          const next = scrollY + item.nextElementSibling.getBoundingClientRect().top;
+
+          slideAnimation(next);//slideAnimation함수를 호출하여 다음 섹션으로 스크롤 합니다.
+
+          //0.5초후에 bouncing함수를 호출하여 바운스 효과를 추가
+          setTimeout(function(){
+            bouncing(-1)
+          }, 500);
+
+          //슬라이드 이벤트가 끝난 뒤 슬라이드 애니메이션 상태를 true로 되돌려 애니메이션이 종료되었음을 나타냅니다.
+          setTimeout(function(){
+            slideAniStatus = true;
+          }, 1000)
+        }
+        e.preventDefault();//기본 휠 스크롤 동작을 방지합니다.
+      })
+    }
   </script>
 </body>
 
